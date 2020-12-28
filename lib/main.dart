@@ -8,6 +8,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
 
   final lightTheme = ThemeData(
+    fontFamily: "Ubuntu",
     primarySwatch: Colors.lightGreen,
     primaryColor: Colors.lightGreen.shade600,
     accentColor: Colors.orangeAccent.shade400,
