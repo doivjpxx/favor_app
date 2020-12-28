@@ -1,12 +1,9 @@
 import 'package:favors/pages/home.dart';
 import 'package:flutter/material.dart';
 
-import 'models/favor.dart';
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   final lightTheme = ThemeData(
     fontFamily: "Ubuntu",
     primarySwatch: Colors.lightGreen,

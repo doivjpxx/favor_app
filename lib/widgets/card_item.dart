@@ -17,16 +17,22 @@ class FavorCardItem extends StatelessWidget {
             padding: EdgeInsets.all(8.0),
             child: Column(children: <Widget>[
               _itemHeader(favor),
-              Text(favor.description),
+              Hero(
+                tag: "description_${favor.uuid}",
+                child: Text(favor.description),
+              ),
               _itemFooter(context, favor)
             ])));
   }
 
   Row _itemHeader(Favor favor) {
     return Row(children: <Widget>[
-      CircleAvatar(
-        backgroundImage: NetworkImage(
-          favor.friend.photoURL,
+      Hero(
+        tag: "avatar_${favor.uuid}",
+        child: CircleAvatar(
+          backgroundImage: NetworkImage(
+            favor.friend.photoURL,
+          ),
         ),
       ),
       Expanded(

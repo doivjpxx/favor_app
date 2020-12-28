@@ -2,6 +2,7 @@ import 'package:favors/constants/mock_values.dart';
 import 'package:favors/models/favor.dart';
 import 'package:favors/pages/requests.dart';
 import 'package:favors/widgets/card_item.dart';
+import 'package:favors/widgets/favor_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -73,13 +74,15 @@ class FavorsPageState extends State<FavorsPage> {
           ),
           body: TabBarView(
             children: [
-              _favorsList("Pending Requests", this.pendingAnswerFavors),
-              _favorsList("Doing", this.acceptedFavors),
-              _favorsList("Completed", this.completedFavors),
-              _favorsList("Refused", this.refusedFavors)
+              FavorsList(
+                  title: "Pending Requests", favors: this.pendingAnswerFavors),
+              FavorsList(title: "Doing", favors: this.acceptedFavors),
+              FavorsList(title: "Completed", favors: this.completedFavors),
+              FavorsList(title: "Refused", favors: this.refusedFavors)
             ],
           ),
           floatingActionButton: FloatingActionButton(
+              heroTag: "request_favor",
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => RequestsFavorPage(
@@ -95,20 +98,5 @@ class FavorsPageState extends State<FavorsPage> {
     return Tab(
       child: Text(title),
     );
-  }
-
-  Widget _favorsList(String title, List<Favor> favors) {
-    return Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
-      Padding(child: Text(title), padding: EdgeInsets.only(top: 16.0)),
-      Expanded(
-        child: ListView.builder(
-            physics: BouncingScrollPhysics(),
-            itemCount: favors.length,
-            itemBuilder: (BuildContext context, int index) {
-              final favor = favors[index];
-              return FavorCardItem(favor: favor);
-            }),
-      )
-    ]);
   }
 }
