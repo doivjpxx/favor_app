@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1023957760632",
+    "project_id": "favors-flutter",
+    "storage_bucket": "favors-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023957760632:android:d5afcf04d6b82792658b8d",
+        "android_client_info": {
+          "package_name": "com.phonghy.favor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023957760632-2nniurttk7qfea9lmpui3ulc2he6farf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOwPUI9Isfh7Ma820rH_LqXGyAK-NO7Ts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1023957760632-2nniurttk7qfea9lmpui3ulc2he6farf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1023957760632-i78fd1c3sgcodf5d1kl6renccb1vrfk0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.phonghy.favor"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

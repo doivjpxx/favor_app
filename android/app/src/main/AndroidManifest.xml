@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.favors">
+    package="com.phonghy.favor">
    <application
         android:label="favors"
         android:icon="@mipmap/ic_launcher">

@@ -1,4 +1,4 @@
-package com.example.favors
+package com.phonghy.favor
 
 import io.flutter.embedding.android.FlutterActivity
 
