@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:favors/models/favor.dart';
 import 'package:favors/models/friend.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -16,15 +19,40 @@ class RequestsFavorPage extends StatefulWidget {
 
 class RequestsFavorPageState extends State<RequestsFavorPage> {
   final _formKey = GlobalKey<FormState>();
+  Friend _selectedFriend;
+  DateTime _dueDate;
+  String _description;
+  List<Friend> friends;
 
   static RequestsFavorPageState of(BuildContext context) {
     return context.ancestorStateOfType(TypeMatcher<RequestsFavorPageState>());
   }
 
-  void save() {
+  void save(BuildContext context) async {
     if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+
+      final currentUser = await FirebaseAuth.instance.currentUser();
+
+      _saveFavorOnFirebase(Favor(
+          to: _selectedFriend.number,
+          description: _description,
+          dueDate: _dueDate,
+          friend: Friend(
+              name: currentUser.displayName,
+              number: currentUser.phoneNumber,
+              photoURL: currentUser.photoUrl)));
+
+      // Navigate to home
       Navigator.pop(context);
     }
+  }
+
+  void _saveFavorOnFirebase(Favor favor) async {
+    await Firestore.instance
+        .collection('favors')
+        .document()
+        .setData(favor.toJson());
   }
 
   @override
@@ -38,7 +66,7 @@ class RequestsFavorPageState extends State<RequestsFavorPage> {
               child: Text("SAVE"),
               textColor: Colors.white,
               onPressed: () {
-                RequestsFavorPageState.of(context).save();
+                RequestsFavorPageState.of(context).save(context);
               },
             )
           ],

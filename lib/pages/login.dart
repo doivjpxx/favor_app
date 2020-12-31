@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:favors/models/friend.dart';
+import 'package:favors/pages/home.dart';
 import 'package:favors/widgets/verification_code.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   int _currentStep = 0;
 
+  String _verificationId = "";
   String _smsCode = "";
   String _phoneNumber = "";
   bool _showProgress = false;
@@ -35,6 +37,18 @@ class _LoginPageState extends State<LoginPage> {
     StepState.indexed,
     StepState.indexed
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    FirebaseAuth.instance.currentUser().then((user) {
+      if (user != null) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => FavorsPage()));
+      }
+    });
+  }
 
   bool _enteringPhoneNumber() =>
       _currentStep == 0 && _stepsState[0] == StepState.editing;
@@ -73,10 +87,72 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _sendVerificationCode() async {
-    // final PhoneCodeSent codeSent = (String verId, [int forceCodeResend]) {
-    //   _verificationId = verId;
-    //   _gotoVerificationStep();
-    // }
+    final PhoneCodeSent codeSent = (String verId, [int forceCodeResend]) {
+      _verificationId = verId;
+      _gotoVerificationStep();
+    };
+
+    final PhoneVerificationCompleted verificationSuccess = (FirebaseUser user) {
+      _loggedIn();
+    };
+
+    final PhoneVerificationFailed verificationFailed =
+        (AuthException exception) {
+      _goBackToFirstStep();
+    };
+
+    final PhoneCodeAutoRetrievalTimeout autoRetrievalTimeout = (String verId) {
+      this._verificationId = verId;
+    };
+
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: _phoneNumber,
+      codeSent: codeSent,
+      verificationCompleted: verificationSuccess,
+      verificationFailed: verificationFailed,
+      codeAutoRetrievalTimeout: autoRetrievalTimeout,
+      timeout: Duration(seconds: 0),
+    );
+  }
+
+  void _executeLogin() async {
+    setState(() {
+      _showProgress = true;
+    });
+
+    await FirebaseAuth.instance.signInWithCredential(
+        PhoneAuthProvider.getCredential(
+            verificationId: _verificationId, smsCode: _smsCode));
+
+    FirebaseAuth.instance.currentUser().then((user) {
+      if (user != null) {
+        _goToProfileStep();
+      }
+    });
+  }
+
+  void _loggedIn() {}
+
+  void _gotoVerificationStep() {}
+
+  void _goBackToFirstStep() {}
+
+  void _goToProfileStep() {}
+
+  void _saveProfile() async {
+    setState(() {
+      _showProgress = true;
+    });
+
+    final user = await FirebaseAuth.instance.currentUser();
+
+    final updateInfo = UserUpdateInfo();
+    updateInfo.displayName = _displayName;
+
+    await user.updateProfile(updateInfo);
+
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => FavorsPage()));
   }
 
   @override

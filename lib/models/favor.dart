@@ -7,6 +7,7 @@ class Favor {
   final bool accepted;
   final DateTime completed;
   final Friend friend;
+  final String to;
 
   Favor(
       {this.uuid,
@@ -14,7 +15,8 @@ class Favor {
       this.dueDate,
       this.accepted,
       this.completed,
-      this.friend});
+      this.friend,
+      this.to});
 
   /// returns true if the favor is active ( the user is doing it )
   get isDoing => accepted == true && completed == null;
@@ -35,14 +37,36 @@ class Favor {
     bool accepted,
     DateTime completed,
     Friend friend,
+    String to,
   }) {
     return Favor(
-      uuid: uuid ?? this.uuid,
-      description: description ?? this.description,
-      dueDate: dueDate ?? this.dueDate,
-      accepted: accepted ?? this.accepted,
-      completed: completed ?? this.completed,
-      friend: friend ?? this.friend,
-    );
+        uuid: uuid ?? this.uuid,
+        description: description ?? this.description,
+        dueDate: dueDate ?? this.dueDate,
+        accepted: accepted ?? this.accepted,
+        completed: completed ?? this.completed,
+        friend: friend ?? this.friend,
+        to: to ?? this.to);
   }
+
+  Favor.fromMap(String uid, Map<String, dynamic> data)
+      : this(
+            uuid: uid,
+            description: data['description'],
+            dueDate: DateTime.fromMillisecondsSinceEpoch(data['dueDate']),
+            accepted: data['accepted'],
+            completed: data['completed'] != null
+                ? DateTime.fromMillisecondsSinceEpoch(data['completed'])
+                : null,
+            friend: Friend.fromMap(data['friend']),
+            to: data['to']);
+
+  Map<String, dynamic> toJson() => {
+        'description': this.description,
+        'dueDate': this.dueDate,
+        'accepted': this.accepted,
+        'completed': this.completed,
+        'friend': this.friend,
+        'to': this.to,
+      };
 }
